@@ -1,43 +1,43 @@
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Main {
 	public static void main(String[] args) {
+		// Citirea filmelor din CSV
+		MovieDatabase movieDatabase = new MovieDatabase("movie-recommendation-system-main/dataset");
+		Map<String, Movie> movies = movieDatabase.getMovies();
 
-		Map<String, Movie> movies = new HashMap<>();
+		// Citirea preferințelor utilizatorului
+		UserInput userInput = new UserInput();
+		Map<String, List<String>> userPreferences = userInput.getUserPreferences();
 
-		File dir = new File("../dataset");
+		// Afișează filmele și preferințele utilizatorului
+		System.out.println("User preferences before update:");
+		System.out.println(userPreferences);
 
-		for (File file : dir.listFiles()) {
-			if (file.isFile() && file.getName().endsWith(".csv")) {
+		// Crează un obiect UserPreferencesUpdated
+		UserPreferencesUpdated updatedPreferences = new UserPreferencesUpdated(userPreferences, movies);
 
-				FileReader reader = null;
-				try {
-					reader = new FileReader(file);
-				} catch (FileNotFoundException e) {
-					System.out.println("File not found");
-				}
+		// Actualizează preferințele utilizatorului pe baza filmelor adăugate/dislike
+		updatedPreferences.updatePreferences();
 
-				CsvToBean<Movie> csvToBean = new CsvToBeanBuilder<Movie>(reader)
-						.withType(Movie.class)
-						.withIgnoreLeadingWhiteSpace(true)
-						.build();
+		// Afișează preferințele actualizate
+		System.out.println("User preferences after update:");
+		System.out.println(updatedPreferences.getUpdatedPreferences());
 
-				List<Movie> parsedMovies = csvToBean.parse();
+		// Obține preferințele actualizate
+		Map<String, List<String>> updatedUserPreferences = updatedPreferences.getUpdatedPreferences();
 
-				for (Movie movie : parsedMovies) {
-					movies.putIfAbsent(movie.getMovieId(), movie);
-				}
-			}
-		}
+		// Crează un obiect RecommendationAlgorithm cu preferințele actualizate
+		RecommendationAlgorithm recommendationAlgorithm = new RecommendationAlgorithm(updatedUserPreferences, movies);
 
-		System.out.println(movies);
+		// Obține recomandările
+		List<String> recommendedMovies = recommendationAlgorithm.recommendMovies();
+
+		// Afișează recomandările
+		System.out.println("Recommended movies:");
+		recommendedMovies.forEach(System.out::println);
+
+
 	}
 }
