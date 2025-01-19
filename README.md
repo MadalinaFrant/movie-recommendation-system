@@ -1,7 +1,7 @@
 # Movie Recommendation System
 
 ## Overview
-This project implements a **Movie Recommendation System** in Java, featuring a minimal web-based interface. Users can input their movie preferences, including likes, dislikes, preferred actors, genres, directors, and time periods. Based on this input, the system generates recommendations, supporting two modes:
+This project implements a **Movie Recommendation System** in Java, featuring a minimal web-based interface. Users can input their movie preferences, including likes, dislikes, preferred actors, genres, and directors. Based on this input, the system generates recommendations, supporting two modes:
 
 1. **Classic Recommendation**: A single user's preferences are considered to generate recommendations.
 2. **Movie Night**: Two users enter their preferences, and recommendations are tailored to accommodate both.
@@ -21,7 +21,7 @@ The project explores the impact of using **design patterns** and **architectural
 The recommendation system will:
 - Allow users to specify preferences:
   - **Movie Likes and Dislikes**: Ordered lists indicating the strength of preference for each movie.
-  - **Preferred Attributes**: Genres, actors, directors, and time periods.
+  - **Preferred Attributes**: Genres, actors, and directors.
 - Provide movie suggestions based on:
   - The entered preferences for a single user (**Classic**).
   - A combination of preferences for two users (**Movie Night**).
@@ -66,7 +66,7 @@ To assess the impact of design and architectural patterns, the following metrics
 ## Project Structure
 The project consists of the following main modules:
 
-- **Movie Database:** Stores movie data, including information on genres, ratings, and popularity, using PostgreSQL. The MovieLens dataset will be used to obtain movie information. 
+- **Movie Database:** Stores movie data, including information on genres, ratings, and popularity. The IMDb Movies Dataset Based on Genre dataset will be used to obtain movie information (available on Kaggle).
 - **User Preferences:** Captures and manages user preferences for recommendations.
 - **Recommendation Engine:** Generates movie recommendations based on user preferences and movie data.
 
