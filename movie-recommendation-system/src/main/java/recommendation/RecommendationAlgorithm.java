@@ -1,3 +1,5 @@
+package recommendation;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -5,17 +7,22 @@ public class RecommendationAlgorithm {
     private Map<String, List<String>> userPreferences;
     private Map<String, Movie> movies;
 
-    public RecommendationAlgorithm(Map<String, List<String>> userPreferences, Map<String, Movie> movies) {
+    public RecommendationAlgorithm(Map<String, List<String>> userPreferences) {
         this.userPreferences = userPreferences;
-        this.movies = movies;
+        this.movies = MovieDatabase.getMovies();
     }
 
     public List<String> recommendMovies() {
-        List<String> preferredDirectors = userPreferences.get("Directors");
-        List<String> preferredActors = userPreferences.get("Actors");
-        List<String> preferredGenres = userPreferences.get("Genres");
-        List<String> likedMovies = userPreferences.get("Liked Movies");
-        List<String> dislikedMovies = userPreferences.get("Disliked Movies");
+        List<String> likedMovies = userPreferences.get("likedMovies");
+        List<String> dislikedMovies = userPreferences.get("dislikedMovies");
+        List<String> preferredGenres = userPreferences.get("genres");
+        List<String> preferredActors = userPreferences.get("actors");
+        List<String> preferredDirectors = userPreferences.get("directors");
+
+        System.out.println("User preferences:" + userPreferences);
+
+        System.out.println("Liked movies: " + likedMovies);
+        System.out.println("Disliked movies: " + dislikedMovies);
 
         // Verifică dacă sunt preferințe pentru director, actori și genuri
         if (preferredDirectors == null) preferredDirectors = new ArrayList<>();
@@ -26,6 +33,8 @@ public class RecommendationAlgorithm {
         Set<String> excludedMovies = new HashSet<>();
         if (likedMovies != null) excludedMovies.addAll(likedMovies);
         if (dislikedMovies != null) excludedMovies.addAll(dislikedMovies);
+
+        System.out.println("Excluded movies: " + excludedMovies);
 
         // Listă pentru a stoca filmele și scorurile lor
         List<MovieScore> movieScores = new ArrayList<>();

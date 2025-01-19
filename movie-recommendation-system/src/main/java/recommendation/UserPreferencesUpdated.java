@@ -1,3 +1,5 @@
+package recommendation;
+
 import java.util.List;
 import java.util.Map;
 
@@ -5,35 +7,36 @@ public class UserPreferencesUpdated {
     private Map<String, List<String>> userPreferences;
     private Map<String, Movie> movies;
 
-    public UserPreferencesUpdated(Map<String, List<String>> userPreferences, Map<String, Movie> movies) {
+    public UserPreferencesUpdated(Map<String, List<String>> userPreferences) {
         this.userPreferences = userPreferences;
-        this.movies = movies;
+        this.movies = MovieDatabase.getMovies();
     }
 
     public void updatePreferences() {
+
         // Procesăm filmele favorite: adăugăm genuri, actori și regizori
-        List<String> likedMovies = userPreferences.get("Liked Movies");
+        List<String> likedMovies = userPreferences.get("likedMovies");
         if (likedMovies != null) {
             for (String movieName : likedMovies) {
                 Movie movie = findMovieByName(movieName);
                 if (movie != null) {
                     // Adaugă genurile, actori și regizori doar dacă nu sunt deja în listă
-                    addUniqueItems("Genres", movie.getGenresAsList());
-                    addUniqueItems("Actors", movie.getStarsAsList());
-                    addUniqueItems("Directors", movie.getDirectorsAsList());
+                    addUniqueItems("genres", movie.getGenresAsList());
+                    addUniqueItems("actors", movie.getStarsAsList());
+                    addUniqueItems("directors", movie.getDirectorsAsList());
                 }
             }
         }
 
         // Procesăm filmele nesuferite: eliminăm genuri, actori și regizori
-        List<String> dislikedMovies = userPreferences.get("Disliked Movies");
+        List<String> dislikedMovies = userPreferences.get("dislikedMovies");
         if (dislikedMovies != null) {
             for (String movieName : dislikedMovies) {
                 Movie movie = findMovieByName(movieName);
                 if (movie != null) {
-                    removeItemsFromList("Genres", movie.getGenresAsList());
-                    removeItemsFromList("Actors", movie.getStarsAsList());
-                    removeItemsFromList("Directors", movie.getDirectorsAsList());
+                    removeItemsFromList("genres", movie.getGenresAsList());
+                    removeItemsFromList("actors", movie.getStarsAsList());
+                    removeItemsFromList("directors", movie.getDirectorsAsList());
                 }
             }
         }

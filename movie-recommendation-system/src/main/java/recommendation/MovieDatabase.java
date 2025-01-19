@@ -1,17 +1,27 @@
+package recommendation;
+
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static org.springframework.util.StringUtils.capitalize;
 
 public class MovieDatabase {
-    private Map<String, Movie> movies = new HashMap<>();
+    private static Map<String, Movie> movies = new HashMap<>();
+    private static Set<String> movieNames = new HashSet<>();
+    private static Set<String> genres = new HashSet<>();
+    private static Set<String> actors = new HashSet<>();
+    private static Set<String> directors = new HashSet<>();
 
     public MovieDatabase(String directoryPath) {
+        if (!movies.isEmpty()) {
+            return;
+        }
+
         loadMovies(directoryPath);
     }
 
@@ -29,7 +39,13 @@ public class MovieDatabase {
                     List<Movie> parsedMovies = csvToBean.parse();
                     for (Movie movie : parsedMovies) {
                         movies.putIfAbsent(movie.getMovieId(), movie);
+
+                        movieNames.add(movie.getMovieName());
+                        actors.addAll(movie.getStarsAsList());
+                        directors.addAll(movie.getDirectorsAsList());
                     }
+
+                    genres.add(capitalize(file.getName().replace(".csv", "")));
                 } catch (FileNotFoundException e) {
                     System.out.println("File not found: " + file.getName());
                 } catch (Exception e) {
@@ -39,7 +55,23 @@ public class MovieDatabase {
         }
     }
 
-    public Map<String, Movie> getMovies() {
+    public static Map<String, Movie> getMovies() {
         return movies;
+    }
+
+    public static Set<String> getMovieNames() {
+        return movieNames;
+    }
+
+    public static Set<String> getGenres() {
+        return genres;
+    }
+
+    public static Set<String> getActors() {
+        return actors;
+    }
+
+    public static Set<String> getDirectors() {
+        return directors;
     }
 }

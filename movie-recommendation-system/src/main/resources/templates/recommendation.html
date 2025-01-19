@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Recommendations</title>
+</head>
+<body>
+<h1>Recommended Movies</h1>
+<ul>
+    <li th:each="movie : ${recommendedMovies}" th:text="${movie}"></li>
+</ul>
+<a href="/">Back to Home</a>
+</body>
+</html>

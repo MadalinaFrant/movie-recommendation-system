@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Movie Recommendation</title>
+</head>
+<body>
+<h1>Movie Recommendation System</h1>
+
+<form action="/recommendation" method="post">
+    <h2>Classic Recommendation</h2>
+
+    <label for="likedMovies">Liked Movies:</label>
+    <input type="text" name="likedMovies" id="likedMovies">
+
+    <label for="dislikedMovies">Disliked Movies:</label>
+    <input type="text" name="dislikedMovies" id="dislikedMovies">
+
+    <label for="genres">Genres:</label>
+    <input type="text" name="genres" id="genres">
+
+    <label for="actors">Actors:</label>
+    <input type="text" name="actors" id="actors">
+
+    <label for="directors">Directors:</label>
+    <input type="text" name="directors" id="directors">
+
+    <button type="submit">Get Recommendations</button>
+</form>
+
+</body>
+</html>
