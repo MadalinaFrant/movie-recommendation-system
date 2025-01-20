@@ -1,4 +1,3 @@
-// MovieSystem.java
 package recommendation;
 
 import com.opencsv.bean.CsvBindByName;
@@ -57,17 +56,17 @@ public class MovieSystem {
 
         // Duplicate code everywhere for list processing
         public List<String> getGenresList() {
-            if(genres == null || genres.isEmpty()) return new ArrayList<>();
+            if (genres == null || genres.isEmpty()) return new ArrayList<>();
             return Arrays.stream(genres.split(",")).map(String::trim).collect(Collectors.toList());
         }
 
         public List<String> getDirectorsList() {
-            if(directors == null || directors.isEmpty()) return new ArrayList<>();
+            if (directors == null || directors.isEmpty()) return new ArrayList<>();
             return Arrays.stream(directors.split(",")).map(String::trim).collect(Collectors.toList());
         }
 
         public List<String> getStarsList() {
-            if(stars == null || stars.isEmpty()) return new ArrayList<>();
+            if (stars == null || stars.isEmpty()) return new ArrayList<>();
             return Arrays.stream(stars.split(",")).map(String::trim).collect(Collectors.toList());
         }
     }
@@ -75,7 +74,9 @@ public class MovieSystem {
     // God controller handling everything
     @GetMapping("/")
     public String homePage(Model model) {
-        if(!IS_INITIALIZED) initializeMovies();
+        if (!IS_INITIALIZED) {
+            initializeMovies();
+        }
         model.addAttribute("moviesList", MOVIE_NAMES);
         model.addAttribute("genresList", GENRES);
         model.addAttribute("actorsList", ACTORS);
@@ -99,20 +100,20 @@ public class MovieSystem {
         Map<String, List<String>> preferences = new HashMap<>();
 
         // Process all inputs into one big map
-        for(Map.Entry<String, String> entry : userInput.entrySet()) {
+        for (Map.Entry<String, String> entry : userInput.entrySet()) {
             String key = entry.getKey();
             String baseKey = key.replaceAll("[12]$", "");
             String[] values = entry.getValue().split("\n");
             List<String> valueList = new ArrayList<>();
-            for(String v : values) {
-                if(v != null && !v.trim().isEmpty()) valueList.add(v.trim());
+            for (String v : values) {
+                if (v != null && !v.trim().isEmpty()) valueList.add(v.trim());
             }
 
-            if(key.equals(baseKey)) {
+            if (key.equals(baseKey)) {
                 preferences.put(key, valueList);
             } else {
                 List<String> existing = preferences.get(baseKey);
-                if(existing == null) {
+                if (existing == null) {
                     existing = new ArrayList<>();
                     preferences.put(baseKey, existing);
                 }
@@ -123,47 +124,47 @@ public class MovieSystem {
         // Update preferences based on liked/disliked movies - all in one big method
         List<String> likedMovies = preferences.get("likedMovies");
         List<String> dislikedMovies = preferences.get("dislikedMovies");
-        if(likedMovies != null) {
-            for(String movieName : likedMovies) {
-                for(MovieData movie : ALL_MOVIES) {
-                    if(movie.movieName.equalsIgnoreCase(movieName)) {
+        if (likedMovies != null) {
+            for (String movieName : likedMovies) {
+                for (MovieData movie : ALL_MOVIES) {
+                    if (movie.movieName.equalsIgnoreCase(movieName)) {
                         // Add genres
                         List<String> genres = preferences.computeIfAbsent("genres", k -> new ArrayList<>());
-                        for(String genre : movie.getGenresList()) {
+                        for (String genre : movie.getGenresList()) {
                             boolean exists = false;
-                            for(String g : genres) {
-                                if(g.equalsIgnoreCase(genre)) {
+                            for (String g : genres) {
+                                if (g.equalsIgnoreCase(genre)) {
                                     exists = true;
                                     break;
                                 }
                             }
-                            if(!exists) genres.add(genre);
+                            if (!exists) genres.add(genre);
                         }
 
                         // Add actors
                         List<String> actors = preferences.computeIfAbsent("actors", k -> new ArrayList<>());
-                        for(String actor : movie.getStarsList()) {
+                        for (String actor : movie.getStarsList()) {
                             boolean exists = false;
-                            for(String a : actors) {
-                                if(a.equalsIgnoreCase(actor)) {
+                            for (String a : actors) {
+                                if (a.equalsIgnoreCase(actor)) {
                                     exists = true;
                                     break;
                                 }
                             }
-                            if(!exists) actors.add(actor);
+                            if (!exists) actors.add(actor);
                         }
 
                         // Add directors
                         List<String> directors = preferences.computeIfAbsent("directors", k -> new ArrayList<>());
-                        for(String director : movie.getDirectorsList()) {
+                        for (String director : movie.getDirectorsList()) {
                             boolean exists = false;
-                            for(String d : directors) {
-                                if(d.equalsIgnoreCase(director)) {
+                            for (String d : directors) {
+                                if (d.equalsIgnoreCase(director)) {
                                     exists = true;
                                     break;
                                 }
                             }
-                            if(!exists) directors.add(director);
+                            if (!exists) directors.add(director);
                         }
                         break;
                     }
@@ -172,24 +173,24 @@ public class MovieSystem {
         }
 
         // Remove preferences from disliked movies
-        if(dislikedMovies != null) {
-            for(String movieName : dislikedMovies) {
-                for(MovieData movie : ALL_MOVIES) {
-                    if(movie.movieName.equalsIgnoreCase(movieName)) {
+        if (dislikedMovies != null) {
+            for (String movieName : dislikedMovies) {
+                for (MovieData movie : ALL_MOVIES) {
+                    if (movie.movieName.equalsIgnoreCase(movieName)) {
                         List<String> genres = preferences.get("genres");
-                        if(genres != null) {
+                        if (genres != null) {
                             genres.removeIf(g -> movie.getGenresList().stream()
                                     .anyMatch(mg -> mg.equalsIgnoreCase(g)));
                         }
 
                         List<String> actors = preferences.get("actors");
-                        if(actors != null) {
+                        if (actors != null) {
                             actors.removeIf(a -> movie.getStarsList().stream()
                                     .anyMatch(ma -> ma.equalsIgnoreCase(a)));
                         }
 
                         List<String> directors = preferences.get("directors");
-                        if(directors != null) {
+                        if (directors != null) {
                             directors.removeIf(d -> movie.getDirectorsList().stream()
                                     .anyMatch(md -> md.equalsIgnoreCase(d)));
                         }
@@ -202,11 +203,11 @@ public class MovieSystem {
         // Calculate recommendations - everything in one huge block
         Map<String, Integer> movieScores = new HashMap<>();
         Set<String> excludedMovies = new HashSet<>();
-        if(likedMovies != null) excludedMovies.addAll(likedMovies);
-        if(dislikedMovies != null) excludedMovies.addAll(dislikedMovies);
+        if (likedMovies != null) excludedMovies.addAll(likedMovies);
+        if (dislikedMovies != null) excludedMovies.addAll(dislikedMovies);
 
-        for(MovieData movie : ALL_MOVIES) {
-            if(excludedMovies.stream().anyMatch(e -> e.equalsIgnoreCase(movie.movieName))) {
+        for (MovieData movie : ALL_MOVIES) {
+            if (excludedMovies.stream().anyMatch(e -> e.equalsIgnoreCase(movie.movieName))) {
                 continue;
             }
 
@@ -215,42 +216,42 @@ public class MovieSystem {
             List<String> preferredActors = preferences.get("actors");
             List<String> preferredGenres = preferences.get("genres");
 
-            if(preferredDirectors != null && !preferredDirectors.isEmpty()) {
-                for(String director : movie.getDirectorsList()) {
-                    if(preferredDirectors.stream().anyMatch(d -> d.equalsIgnoreCase(director))) {
+            if (preferredDirectors != null && !preferredDirectors.isEmpty()) {
+                for (String director : movie.getDirectorsList()) {
+                    if (preferredDirectors.stream().anyMatch(d -> d.equalsIgnoreCase(director))) {
                         score += 5;
                     }
                 }
             }
 
-            if(preferredActors != null && !preferredActors.isEmpty()) {
-                for(String actor : movie.getStarsList()) {
-                    if(preferredActors.stream().anyMatch(a -> a.equalsIgnoreCase(actor))) {
+            if (preferredActors != null && !preferredActors.isEmpty()) {
+                for (String actor : movie.getStarsList()) {
+                    if (preferredActors.stream().anyMatch(a -> a.equalsIgnoreCase(actor))) {
                         score += 3;
                     }
                 }
             }
 
-            if(preferredGenres != null && !preferredGenres.isEmpty()) {
-                for(String genre : movie.getGenresList()) {
-                    if(preferredGenres.stream().anyMatch(g -> g.equalsIgnoreCase(genre))) {
+            if (preferredGenres != null && !preferredGenres.isEmpty()) {
+                for (String genre : movie.getGenresList()) {
+                    if (preferredGenres.stream().anyMatch(g -> g.equalsIgnoreCase(genre))) {
                         score += 2;
                     }
                 }
             }
 
-            if(score > 0) {
+            if (score > 0) {
                 movieScores.put(movie.movieName, score);
             }
         }
 
         // Manual sorting instead of using proper collections
         List<String> recommendations = new ArrayList<>();
-        while(!movieScores.isEmpty() && recommendations.size() < 10) {
+        while (!movieScores.isEmpty() && recommendations.size() < 10) {
             String bestMovie = null;
             int highestScore = -1;
-            for(Map.Entry<String, Integer> entry : movieScores.entrySet()) {
-                if(entry.getValue() > highestScore) {
+            for (Map.Entry<String, Integer> entry : movieScores.entrySet()) {
+                if (entry.getValue() > highestScore) {
                     highestScore = entry.getValue();
                     bestMovie = entry.getKey();
                 }
@@ -266,35 +267,35 @@ public class MovieSystem {
     // Initialization mixed with everything else
     private static void initializeMovies() {
         try {
-            File dir = new File("dataset");
-            if(!dir.exists()) {
+            File dir = new File("../dataset");
+            if (!dir.exists()) {
                 System.out.println("Dataset directory not found!");
                 return;
             }
 
-            for(File file : dir.listFiles()) {
-                if(!file.getName().endsWith(".csv")) continue;
+            for (File file : dir.listFiles()) {
+                if (!file.getName().endsWith(".csv")) continue;
 
-                try(FileReader reader = new FileReader(file)) {
+                try (FileReader reader = new FileReader(file)) {
                     CsvToBean<MovieData> csvToBean = new CsvToBeanBuilder<MovieData>(reader)
                             .withType(MovieData.class)
                             .withIgnoreLeadingWhiteSpace(true)
                             .build();
 
-                    for(MovieData movie : csvToBean.parse()) {
+                    for (MovieData movie : csvToBean.parse()) {
                         ALL_MOVIES.add(movie);
                         MOVIE_NAMES.add(movie.movieName);
                         DIRECTORS.addAll(movie.getDirectorsList());
                         ACTORS.addAll(movie.getStarsList());
                         GENRES.addAll(movie.getGenresList());
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     System.out.println("Error reading file " + file.getName() + ": " + e.getMessage());
                 }
             }
 
             IS_INITIALIZED = true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Initialization failed: " + e.getMessage());
         }
     }
