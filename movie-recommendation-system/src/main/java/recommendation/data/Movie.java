@@ -1,4 +1,4 @@
-package recommendation;
+package recommendation.data;
 
 import com.opencsv.bean.CsvBindByName;
 
@@ -123,7 +123,7 @@ public class Movie {
 
 	@Override
 	public String toString() {
-		return "recommendation.Movie {" +
+		return "Movie {" +
 				"movieId='" + movieId + '\'' +
 				", movieName='" + movieName + '\'' +
 				", year='" + year + '\'' +

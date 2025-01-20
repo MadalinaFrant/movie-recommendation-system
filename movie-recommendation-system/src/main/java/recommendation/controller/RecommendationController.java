@@ -1,10 +1,13 @@
-package recommendation;
+package recommendation.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import recommendation.data.MovieDatabase;
+import recommendation.service.RecommendationAlgorithm;
+import recommendation.service.UserPreferencesUpdater;
 
 import java.util.*;
 
@@ -35,14 +38,18 @@ public class RecommendationController {
 
 		Map<String, List<String>> userPreferences = new HashMap<>();
 
+		// Process user preferences input into structured format
 		for (Map.Entry<String, String> entry : userPreferencesInput.entrySet()) {
 			String key = entry.getKey();
-			String baseKey = key.replaceAll("[12]$", "");
+			String baseKey = key.replaceAll("[12]$", ""); // Normalize the key
+
 			String value = entry.getValue();
+
 			List<String> valuesList = Arrays.stream(value.split("\n"))
-					.map(String::trim) // Remove extra spaces
-					.filter(s -> !s.isEmpty()) // Exclude empty values
+					.map(String::trim)
+					.filter(s -> !s.isEmpty())
 					.toList();
+
 			if (key.equals(baseKey)) { // Classic Recommendation
 				userPreferences.put(key, new ArrayList<>(valuesList));
 			} else { // Movie Night
@@ -55,11 +62,13 @@ public class RecommendationController {
 		System.out.println("User preferences:");
 		System.out.println(userPreferences);
 
-		recommendation.UserPreferencesUpdated updatedPreferences = new recommendation.UserPreferencesUpdated(userPreferences);
+		// Update user preferences based on liked/disliked movies
+		UserPreferencesUpdater updatedPreferences = new UserPreferencesUpdater(userPreferences);
 		updatedPreferences.updatePreferences();
 		Map<String, List<String>> updatedUserPreferences = updatedPreferences.getUpdatedPreferences();
 
-		recommendation.RecommendationAlgorithm recommendationAlgorithm = new recommendation.RecommendationAlgorithm(updatedUserPreferences);
+		// Generate movie recommendations based on updated user preferences
+		RecommendationAlgorithm recommendationAlgorithm = new RecommendationAlgorithm(updatedUserPreferences);
 		List<String> recommendedMovies = recommendationAlgorithm.recommendMovies();
 
 		System.out.println("Updated user preferences:");
