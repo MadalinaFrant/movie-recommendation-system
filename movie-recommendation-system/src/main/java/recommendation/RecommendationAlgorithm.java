@@ -4,14 +4,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class RecommendationAlgorithm {
-    private Map<String, List<String>> userPreferences;
-    private Map<String, Movie> movies;
+    private Map<String, List<String>> userPreferences; // Stores user preferences
+    private Map<String, Movie> movies; // Stores movie data from the database
 
     public RecommendationAlgorithm(Map<String, List<String>> userPreferences) {
         this.userPreferences = userPreferences;
         this.movies = MovieDatabase.getMovies();
     }
 
+    // Recommend movies based on user preferences
     public List<String> recommendMovies() {
         List<String> likedMovies = userPreferences.get("likedMovies");
         List<String> dislikedMovies = userPreferences.get("dislikedMovies");
@@ -19,22 +20,21 @@ public class RecommendationAlgorithm {
         List<String> preferredActors = userPreferences.get("actors");
         List<String> preferredDirectors = userPreferences.get("directors");
 
-        // Verifică dacă sunt preferințe pentru director, actori și genuri
         if (preferredDirectors == null) preferredDirectors = new ArrayList<>();
         if (preferredActors == null) preferredActors = new ArrayList<>();
         if (preferredGenres == null) preferredGenres = new ArrayList<>();
 
-        // Filtrează filmele liked și disliked pentru a le exclude din recomandări
+        // Exclude liked and disliked movies from recommendations
         Set<String> excludedMovies = new HashSet<>();
         if (likedMovies != null) excludedMovies.addAll(likedMovies);
         if (dislikedMovies != null) excludedMovies.addAll(dislikedMovies);
 
-        // Listă pentru a stoca filmele și scorurile lor
+        // List to store movies and their scores
         List<MovieScore> movieScores = new ArrayList<>();
 
-        // Iterează prin fiecare film și calculează scorul pe baza preferințelor
+        // Calculate score for each movie based on user preferences
         for (Movie movie : movies.values()) {
-            // Dacă filmul este în lista de liked sau disliked, îl excludem
+            // Skip movies that are already liked or disliked
             boolean isExcluded = excludedMovies.stream().anyMatch(excluded -> excluded.equalsIgnoreCase(movie.getMovieName()));
             if (isExcluded) {
                 continue;
@@ -42,50 +42,50 @@ public class RecommendationAlgorithm {
 
             int score = 0;
 
-            // Scor pentru regizori
+            // Add score for preferred directors
             if (!preferredDirectors.isEmpty()) {
                 List<String> finalPreferredDirectors = preferredDirectors;
                 score += (int) movie.getDirectorsAsList().stream()
                         .filter(director -> finalPreferredDirectors.stream()
                                 .anyMatch(preferredDirector -> preferredDirector.equalsIgnoreCase(director)))
-                        .count() * 5;  // Prioritate mai mare pentru regizori
+                        .count() * 5; // Higher priority for directors
             }
 
-            // Scor pentru actori
+            // Add score for preferred actors
             if (!preferredActors.isEmpty()) {
                 List<String> finalPreferredActors = preferredActors;
                 score += (int) movie.getStarsAsList().stream()
                         .filter(actor -> finalPreferredActors.stream()
                                 .anyMatch(preferredActor -> preferredActor.equalsIgnoreCase(actor)))
-                        .count() * 3;  // Prioritate mai mare pentru actori
+                        .count() * 3; // Priority for actors
             }
 
-            // Scor pentru genuri
+            // Add score for preferred genres
             if (!preferredGenres.isEmpty()) {
                 List<String> finalPreferredGenres = preferredGenres;
                 score += (int) movie.getGenresAsList().stream()
                         .filter(genre -> finalPreferredGenres.stream()
                                 .anyMatch(preferredGenre -> preferredGenre.equalsIgnoreCase(genre)))
-                        .count() * 2;  // Prioritate mai mică pentru genuri
+                        .count() * 2; // Lower priority for genres
             }
 
-            // Adaugă filmul și scorul său în lista de filme
-            if (score > 0) {  // Adăugăm filmele care au cel puțin un scor mai mare decât 0
+            // Add movie to the list if it has a positive score
+            if (score > 0) {
                 movieScores.add(new MovieScore(movie.getMovieName(), score));
             }
         }
 
-        // Sortează filmele după scor, în ordine descrescătoare
+        // Sort movies by score in descending order and limit to the top 10
         List<String> recommendedMovies = movieScores.stream()
-                .sorted((m1, m2) -> Integer.compare(m2.getScore(), m1.getScore())) // Scor mai mare = mai bun
-                .limit(10) // Limitează la primele 10 filme
+                .sorted((m1, m2) -> Integer.compare(m2.getScore(), m1.getScore()))
+                .limit(10)
                 .map(MovieScore::getMovieName)
                 .collect(Collectors.toList());
 
         return recommendedMovies;
     }
 
-    // Clasă internă pentru a stoca numele filmului și scorul său
+    // Internal class to store movie and score
     private static class MovieScore {
         private String movieName;
         private int score;

@@ -3,24 +3,23 @@ package recommendation;
 import java.util.List;
 import java.util.Map;
 
-public class UserPreferencesUpdated {
+public class UserPreferencesUpdater {
     private Map<String, List<String>> userPreferences;
     private Map<String, Movie> movies;
 
-    public UserPreferencesUpdated(Map<String, List<String>> userPreferences) {
+    public UserPreferencesUpdater(Map<String, List<String>> userPreferences) {
         this.userPreferences = userPreferences;
         this.movies = MovieDatabase.getMovies();
     }
 
     public void updatePreferences() {
 
-        // Procesăm filmele favorite: adăugăm genuri, actori și regizori
+        // Process liked movies: add genres, actors, and directors if they are not already in the list
         List<String> likedMovies = userPreferences.get("likedMovies");
         if (likedMovies != null) {
             for (String movieName : likedMovies) {
                 Movie movie = findMovieByName(movieName);
                 if (movie != null) {
-                    // Adaugă genurile, actori și regizori doar dacă nu sunt deja în listă
                     addUniqueItems("genres", movie.getGenresAsList());
                     addUniqueItems("actors", movie.getStarsAsList());
                     addUniqueItems("directors", movie.getDirectorsAsList());
@@ -28,7 +27,7 @@ public class UserPreferencesUpdated {
             }
         }
 
-        // Procesăm filmele nesuferite: eliminăm genuri, actori și regizori
+        // Process disliked movies: remove genres, actors, and directors if they are in the list
         List<String> dislikedMovies = userPreferences.get("dislikedMovies");
         if (dislikedMovies != null) {
             for (String movieName : dislikedMovies) {
@@ -44,23 +43,13 @@ public class UserPreferencesUpdated {
 
     private Movie findMovieByName(String movieName) {
         for (Movie movie : movies.values()) {
-            if (movie.getMovieName().equalsIgnoreCase(movieName)) {  // Căutăm filmul după nume
+            if (movie.getMovieName().equalsIgnoreCase(movieName)) {
                 return movie;
             }
         }
-        return null;  // Returnează null dacă filmul nu este găsit
+        return null;
     }
 
-    private void removeItemsFromList(String key, List<String> items) {
-        List<String> currentList = userPreferences.get(key);
-        if (currentList != null) {
-            for (String item : items) {
-                currentList.removeIf(existingItem -> existingItem.equalsIgnoreCase(item));
-            }
-        }
-    }
-
-    // Adaugă elemente unice în lista specificată (dacă nu sunt deja prezente)
     private void addUniqueItems(String key, List<String> items) {
         List<String> currentList = userPreferences.computeIfAbsent(key, k -> new java.util.ArrayList<>());
         for (String item : items) {
@@ -73,6 +62,15 @@ public class UserPreferencesUpdated {
             }
             if (!found) {
                 currentList.add(item);
+            }
+        }
+    }
+
+    private void removeItemsFromList(String key, List<String> items) {
+        List<String> currentList = userPreferences.get(key);
+        if (currentList != null) {
+            for (String item : items) {
+                currentList.removeIf(existingItem -> existingItem.equalsIgnoreCase(item));
             }
         }
     }

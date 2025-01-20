@@ -55,7 +55,7 @@ public class RecommendationController {
 		System.out.println("User preferences:");
 		System.out.println(userPreferences);
 
-		recommendation.UserPreferencesUpdated updatedPreferences = new recommendation.UserPreferencesUpdated(userPreferences);
+		UserPreferencesUpdater updatedPreferences = new UserPreferencesUpdater(userPreferences);
 		updatedPreferences.updatePreferences();
 		Map<String, List<String>> updatedUserPreferences = updatedPreferences.getUpdatedPreferences();
 

@@ -12,11 +12,13 @@ import static org.springframework.util.StringUtils.capitalize;
 
 public class MovieDatabase {
     private static Map<String, Movie> movies = new HashMap<>();
+
     private static Set<String> movieNames = new HashSet<>();
     private static Set<String> genres = new HashSet<>();
     private static Set<String> actors = new HashSet<>();
     private static Set<String> directors = new HashSet<>();
 
+    // Load movies from dataset if not already loaded
     public MovieDatabase(String directoryPath) {
         if (!movies.isEmpty()) {
             return;
@@ -25,6 +27,7 @@ public class MovieDatabase {
         loadMovies(directoryPath);
     }
 
+    // Load movies from CSV files
     private void loadMovies(String directoryPath) {
         File dir = new File(directoryPath);
 
@@ -38,7 +41,7 @@ public class MovieDatabase {
 
                     List<Movie> parsedMovies = csvToBean.parse();
                     for (Movie movie : parsedMovies) {
-                        movies.putIfAbsent(movie.getMovieId(), movie);
+                        movies.putIfAbsent(movie.getMovieId(), movie); // Add movie to the database
 
                         movieNames.add(movie.getMovieName());
                         actors.addAll(movie.getStarsAsList());
