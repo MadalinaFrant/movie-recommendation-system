@@ -4,7 +4,7 @@
 This project implements a **Movie Recommendation System** in Java, featuring a minimal web-based interface. Users can input their movie preferences, including likes, dislikes, preferred actors, genres, and directors. Based on this input, the system generates recommendations, supporting two modes:
 
 1. **Classic Recommendation**: A single user's preferences are considered to generate recommendations.
-2. **Movie Night**: Two users enter their preferences, and recommendations are tailored to accommodate both.
+2. **Movie Night**: Two users enter their preferences, and the recommendations are tailored to accommodate both.
 
 The project explores the impact of using **design patterns** and **architectural patterns** on software quality by comparing two implementations: one employing structured patterns and another without structured design, including anti-patterns.
 
@@ -18,32 +18,32 @@ The project explores the impact of using **design patterns** and **architectural
 3. **Compare Results Using Defined Metrics:** Evaluate the differences between implementations in terms of software quality, performance, and maintainability.
 
 ## System Functionality
-The recommendation system will:
-- Allow users to specify preferences:
-  - **Movie Likes and Dislikes**: Ordered lists indicating the strength of preference for each movie.
+The recommendation system:
+- Allows users to specify preferences:
+  - **Movie Likes and Dislikes**: Lists indicating movies the user likes and dislikes.
   - **Preferred Attributes**: Genres, actors, and directors.
-- Provide movie suggestions based on:
-  - The entered preferences for a single user (**Classic**).
+- Provides movie suggestions based on:
+  - The entered preferences for a single user (**Classic Recommendation**).
   - A combination of preferences for two users (**Movie Night**).
 
 ## Design Patterns Used
-In the version optimized with design patterns, the following patterns will be applied:
+In the version optimized with design patterns, the following patterns are applied:
 
-1. **Chain of Responsibility**: To process user preferences in a modular way, allowing each preference type (e.g. genre, actors) to be handled by dedicated handlers.
-2. **Strategy Pattern**: To select and apply different recommendation algorithms (e.g. genre-based, popularity-based) dynamically based on user inputs.
-3. **Builder Pattern**: To construct and manage complex objects like user preference profiles efficiently within a single request.
+1. **Chain of Responsibility**: To process user preferences in a modular way, allowing each preference type (genres, actors, directors) to be handled by dedicated handlers.
+2. **Strategy**: To define and apply different recommendation strategies dynamically based on user inputs, such as liked and disliked movies.
+3. **Singleton**: To ensure that only one instance of the movie database is created and shared across the system.
 
-In the unstructured version, design patterns will be intentionally avoided, and anti-patterns such as **Spaghetti Code** or **God Object** will be introduced to compare their impact on maintainability and scalability.
+In the unstructured version, design patterns are intentionally avoided, and anti-patterns such as **Spaghetti Code** or **God Object** are introduced to compare their impact on maintainability and scalability.
 
 ## Architectural Patterns Used
-The **Layered Architecture** will be employed in the structured implementation to:
-- Separate concerns into layers (e.g. data access, business logic, and presentation).
+The **Layered Architecture** is employed in the structured implementation to:
+- Separate concerns into distinct layers (data access layer, business logic / service layer, and presentation layer).
 - Ensure modularity and simplify testing.
 
-The unstructured version will not use this architecture, highlighting the difficulties of working with tightly-connected, monolithic systems.
+The unstructured version does not use this architecture, highlighting the difficulties of working with tightly-connected, monolithic systems.
 
 ## Comparison Metrics
-To assess the impact of design and architectural patterns, the following metrics will be used to compare the two implementations:
+To assess the impact of design and architectural patterns, the following metrics are used to compare the two implementations:
 
 1. **Execution Time:**  
    - Measure the time taken to generate recommendations, providing insights into the efficiency of each version.
@@ -66,8 +66,8 @@ To assess the impact of design and architectural patterns, the following metrics
 ## Project Structure
 The project consists of the following main modules:
 
-- **Movie Database:** Stores movie data, including information on genres, ratings, and popularity. The IMDb Movies Dataset Based on Genre dataset will be used to obtain movie information (available on Kaggle).
+- **Movie Database:** Stores movie data, including information on genres, ratings, and popularity. The IMDb Movies Dataset Based on Genre dataset is used to obtain movie information (available on Kaggle - https://www.kaggle.com/datasets/rajugc/imdb-movies-dataset-based-on-genre).
 - **User Preferences:** Captures and manages user preferences for recommendations.
 - **Recommendation Engine:** Generates movie recommendations based on user preferences and movie data.
 
-The **with-patterns** branch will contain the version of the system that uses design patterns and architectural patterns, while the **without-pattern** branch will contain the unstructured version.
+The **with-patterns** branch contains the version of the system that uses design patterns and architectural patterns, while the **anti-patterns** branch contains the unstructured version.
