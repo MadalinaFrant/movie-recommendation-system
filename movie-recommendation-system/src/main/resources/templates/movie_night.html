@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Movie Recommendation</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+
+<div style="text-align: center;">
+    <h1>Movie Recommendation System</h1>
+    <h2>Movie Night</h2>
+</div>
+
+<form action="/recommendation" method="post" style="text-align: center;">
+    <div style="display: flex; justify-content: space-between; gap: 20px;">
+        <div style="width: 50%;">
+            <h3>User 1 preferences:</h3>
+
+            <label for="likedMovies1">Liked Movies:</label><br>
+            <textarea name="likedMovies1" id="likedMovies1" rows="5" cols="50"></textarea><br><br>
+
+            <label for="dislikedMovies1">Disliked Movies:</label><br>
+            <textarea name="dislikedMovies1" id="dislikedMovies1" rows="5" cols="50"></textarea><br><br>
+
+            <label for="genres1">Genres:</label><br>
+            <textarea name="genres1" id="genres1" rows="5" cols="50"></textarea><br><br>
+
+            <label for="actors1">Actors:</label><br>
+            <textarea name="actors1" id="actors1" rows="5" cols="50"></textarea><br><br>
+
+            <label for="directors1">Directors:</label><br>
+            <textarea name="directors1" id="directors1" rows="5" cols="50"></textarea><br><br>
+
+        </div>
+
+        <br>
+
+        <div style="width: 50%;">
+            <h3>User 2 preferences:</h3>
+
+            <label for="likedMovies2">Liked Movies:</label><br>
+            <textarea name="likedMovies2" id="likedMovies2" rows="5" cols="50"></textarea><br><br>
+
+            <label for="dislikedMovies2">Disliked Movies:</label><br>
+            <textarea name="dislikedMovies2" id="dislikedMovies2" rows="5" cols="50"></textarea><br><br>
+
+            <label for="genres2">Genres:</label><br>
+            <textarea name="genres2" id="genres2" rows="5" cols="50"></textarea><br><br>
+
+            <label for="actors2">Actors:</label><br>
+            <textarea name="actors2" id="actors2" rows="5" cols="50"></textarea><br><br>
+
+            <label for="directors2">Directors:</label><br>
+            <textarea name="directors2" id="directors2" rows="5" cols="50"></textarea><br><br>
+
+        </div>
+    </div>
+
+    <button type="submit" style="margin-top: 20px; display: inline-block;">Get Recommendations</button>
+</form>
+
+</body>
+</html>

@@ -54,7 +54,9 @@ public class UserPreferencesUpdated {
     private void removeItemsFromList(String key, List<String> items) {
         List<String> currentList = userPreferences.get(key);
         if (currentList != null) {
-            currentList.removeAll(items);
+            for (String item : items) {
+                currentList.removeIf(existingItem -> existingItem.equalsIgnoreCase(item));
+            }
         }
     }
 
@@ -62,7 +64,14 @@ public class UserPreferencesUpdated {
     private void addUniqueItems(String key, List<String> items) {
         List<String> currentList = userPreferences.computeIfAbsent(key, k -> new java.util.ArrayList<>());
         for (String item : items) {
-            if (!currentList.contains(item)) {
+            boolean found = false;
+            for (String existingItem : currentList) {
+                if (existingItem.equalsIgnoreCase(item)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
                 currentList.add(item);
             }
         }

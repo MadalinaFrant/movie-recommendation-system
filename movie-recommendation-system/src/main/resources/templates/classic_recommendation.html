@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Movie Recommendation</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+<div style="text-align: center;">
+    <h1>Movie Recommendation System</h1>
+</div>
+
+<form action="/recommendation" method="post" style="text-align: center;">
+    <div style="text-align: center;">
+        <h2>Classic Recommendation</h2>
+    </div>
+
+    <label for="likedMovies">Liked Movies:</label><br>
+    <textarea name="likedMovies" id="likedMovies" rows="5" cols="50"></textarea><br><br>
+
+    <label for="dislikedMovies">Disliked Movies:</label><br>
+    <textarea name="dislikedMovies" id="dislikedMovies" rows="5" cols="50"></textarea><br><br>
+
+    <label for="genres">Genres:</label><br>
+    <textarea name="genres" id="genres" rows="5" cols="50"></textarea><br><br>
+
+    <label for="actors">Actors:</label><br>
+    <textarea name="actors" id="actors" rows="5" cols="50"></textarea><br><br>
+
+    <label for="directors">Directors:</label><br>
+    <textarea name="directors" id="directors" rows="5" cols="50"></textarea><br><br>
+
+    <button type="submit" style="margin-top: 20px; display: inline-block;">Get Recommendations</button>
+</form>
+
+</body>
+</html>

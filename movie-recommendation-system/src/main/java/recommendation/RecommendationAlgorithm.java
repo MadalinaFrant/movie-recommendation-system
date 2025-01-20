@@ -19,11 +19,6 @@ public class RecommendationAlgorithm {
         List<String> preferredActors = userPreferences.get("actors");
         List<String> preferredDirectors = userPreferences.get("directors");
 
-        System.out.println("User preferences:" + userPreferences);
-
-        System.out.println("Liked movies: " + likedMovies);
-        System.out.println("Disliked movies: " + dislikedMovies);
-
         // Verifică dacă sunt preferințe pentru director, actori și genuri
         if (preferredDirectors == null) preferredDirectors = new ArrayList<>();
         if (preferredActors == null) preferredActors = new ArrayList<>();
@@ -34,15 +29,14 @@ public class RecommendationAlgorithm {
         if (likedMovies != null) excludedMovies.addAll(likedMovies);
         if (dislikedMovies != null) excludedMovies.addAll(dislikedMovies);
 
-        System.out.println("Excluded movies: " + excludedMovies);
-
         // Listă pentru a stoca filmele și scorurile lor
         List<MovieScore> movieScores = new ArrayList<>();
 
         // Iterează prin fiecare film și calculează scorul pe baza preferințelor
         for (Movie movie : movies.values()) {
             // Dacă filmul este în lista de liked sau disliked, îl excludem
-            if (excludedMovies.contains(movie.getMovieName())) {
+            boolean isExcluded = excludedMovies.stream().anyMatch(excluded -> excluded.equalsIgnoreCase(movie.getMovieName()));
+            if (isExcluded) {
                 continue;
             }
 
@@ -50,22 +44,28 @@ public class RecommendationAlgorithm {
 
             // Scor pentru regizori
             if (!preferredDirectors.isEmpty()) {
+                List<String> finalPreferredDirectors = preferredDirectors;
                 score += (int) movie.getDirectorsAsList().stream()
-                        .filter(preferredDirectors::contains)
+                        .filter(director -> finalPreferredDirectors.stream()
+                                .anyMatch(preferredDirector -> preferredDirector.equalsIgnoreCase(director)))
                         .count() * 5;  // Prioritate mai mare pentru regizori
             }
 
             // Scor pentru actori
             if (!preferredActors.isEmpty()) {
+                List<String> finalPreferredActors = preferredActors;
                 score += (int) movie.getStarsAsList().stream()
-                        .filter(preferredActors::contains)
+                        .filter(actor -> finalPreferredActors.stream()
+                                .anyMatch(preferredActor -> preferredActor.equalsIgnoreCase(actor)))
                         .count() * 3;  // Prioritate mai mare pentru actori
             }
 
             // Scor pentru genuri
             if (!preferredGenres.isEmpty()) {
+                List<String> finalPreferredGenres = preferredGenres;
                 score += (int) movie.getGenresAsList().stream()
-                        .filter(preferredGenres::contains)
+                        .filter(genre -> finalPreferredGenres.stream()
+                                .anyMatch(preferredGenre -> preferredGenre.equalsIgnoreCase(genre)))
                         .count() * 2;  // Prioritate mai mică pentru genuri
             }
 

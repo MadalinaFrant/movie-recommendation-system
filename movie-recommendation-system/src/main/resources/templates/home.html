@@ -2,30 +2,19 @@
 <html lang="en">
 <head>
     <title>Movie Recommendation</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<h1>Movie Recommendation System</h1>
 
-<form action="/recommendation" method="post">
-    <h2>Classic Recommendation</h2>
+<div style="text-align: center;">
+    <h1>Movie Recommendation System</h1>
+</div>
 
-    <label for="likedMovies">Liked Movies:</label>
-    <input type="text" name="likedMovies" id="likedMovies">
-
-    <label for="dislikedMovies">Disliked Movies:</label>
-    <input type="text" name="dislikedMovies" id="dislikedMovies">
-
-    <label for="genres">Genres:</label>
-    <input type="text" name="genres" id="genres">
-
-    <label for="actors">Actors:</label>
-    <input type="text" name="actors" id="actors">
-
-    <label for="directors">Directors:</label>
-    <input type="text" name="directors" id="directors">
-
-    <button type="submit">Get Recommendations</button>
-</form>
+<div style="text-align: center;">
+    <button onclick="window.location.href='/classic_recommendation'">Classic Recommendation</button>
+    <br><br>
+    <button onclick="window.location.href='/movie_night'">Movie Night</button>
+</div>
 
 </body>
 </html>

@@ -2,12 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Recommendations</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
-<h1>Recommended Movies</h1>
-<ul>
-    <li th:each="movie : ${recommendedMovies}" th:text="${movie}"></li>
-</ul>
-<a href="/">Back to Home</a>
+<div style="text-align: center;">
+    <h1>Recommended Movies</h1>
+    <ul style="list-style-position: inside; padding: 0; display: inline-block; text-align: left;">
+        <li th:each="movie : ${recommendedMovies}" th:text="${movie}"></li>
+    </ul>
+    <br>
+    <a href="/">Back to Home</a>
+</div>
 </body>
 </html>
